@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAI NGOC IOE 2026 - TEST 46</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f4f8; margin: 0; padding: 20px; color: #333; }
+        .quiz-container { max-width: 700px; background: white; margin: 20px auto; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 8px solid #2e7d32; }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px dashed #2e7d32; padding-bottom: 20px; }
+        .header h1 { color: #2e7d32; margin: 0; font-size: 24px; text-transform: uppercase; }
+        .header p { color: #666; font-style: italic; margin: 5px 0 0 0; }
+        .question { margin-bottom: 25px; padding: 20px; background: #f9f9f9; border-left: 5px solid #2196f3; border-radius: 4px; }
+        .question p { font-weight: bold; margin-top: 0; line-height: 1.5; }
+        .quiz-img { max-width: 100%; height: auto; display: block; margin: 15px 0; border-radius: 6px; max-height: 200px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .options-list { list-style: none; padding: 0; margin: 10px 0 0 0; }
+        .options-list li { margin: 10px 0; }
+        label { cursor: pointer; display: block; padding: 10px 15px; background: #fff; border: 1px solid #ddd; border-radius: 6px; transition: all 0.2s ease; }
+        label:hover { background: #e3f2fd; border-color: #2196f3; }
+        input[type="radio"] { margin-right: 10px; transform: scale(1.1); }
+        button { display: block; width: 100%; padding: 15px; background: #2e7d32; color: white; border: none; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 30px; }
+        button:hover { background: #1b5e20; }
+        #result { margin-top: 30px; padding: 20px; font-size: 20px; font-weight: bold; text-align: center; color: #1565c0; background: #e3f2fd; border-radius: 8px; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div class="header">
+        <h1>MAI NGOC IOE 2026</h1>
+        <p>Ươm Mầm Tương Lai — TEST 46 TRẮC NGHIỆM TRƯỜNG 5</p>
+    </div>
+    
+    <form id="quizForm">
+        
+        <!-- Câu 4 -->
+        <div class="question">
+            <p>Câu 4: The boy tries to kick the ball into the net. He's playing _____.</p>
+            <img class="quiz-img" src="https://unsplash.com" alt="Football Net">
+            <ul class="options-list">
+                <li><label><input type="radio" name="q4" value="A"> A. baseball</label></li>
+                <li><label><input type="radio" name="q4" value="B"> B. basketball</label></li>
+                <li><label><input type="radio" name="q4" value="C"> C. football</label></li>
+                <li><label><input type="radio" name="q4" value="D"> D. volleyball</label></li>
+            </ul>
+        </div>
+
+        <!-- Câu 6 -->
+        <div class="question">
+            <p>Câu 6: Look at the picture and choose the correct answer:</p>
+            <img class="quiz-img" src="https://freepik.com" alt="Sharks">
+            <ul class="options-list">
+                <li><label><input type="radio" name="q6" value="A"> A. five tigers</label></li>
+                <li><label><input type="radio" name="q6" value="B"> B. four tigers</label></li>
+                <li><label><input type="radio" name="q6" value="C"> C. four sharks</label></li>
+                <li><label><input type="radio" name="q6" value="D"> D. five sharks</label></li>
+            </ul>
+        </div>
+
+        <!-- Câu 13 -->
+        <div class="question">
+            <p>Câu 13: The kangaroos are very popular in _____.</p>
+            <ul class="options-list">
+                <li><label><input type="radio" name="q13" value="A"> A. Singapore</label></li>
+                <li><label><input type="radio" name="q13" value="B"> B. Australia</label></li>
+                <li><label><input type="radio" name="q13" value="C"> C. England</label></li>
+                <li><label><input type="radio" name="q13" value="D"> D. Vietnam</label></li>
+            </ul>
+        </div>
+
+        <!-- Câu 16 -->
+        <div class="question">
+            <p>Câu 16: What did the tigers do when you _____ there?</p>
+            <ul class="options-list">
+                <li><label><input type="radio" name="q16" value="A"> A. were</label></li>
+                <li><label><input type="radio" name="q16" value="B"> B. do</label></li>
+                <li><label><input type="radio" name="q16" value="C"> C. does</label></li>
+                <li><label><input type="radio" name="q16" value="D"> D. is</label></li>
+            </ul>
+        </div>
+
+        <!-- Câu 19 -->
+        <div class="question">
+            <p>Câu 19: We had a race at school yesterday. My team ran very fast, and we won the medal. Everyone cheered for us.<br><br>
+            <em>* Nhận định: "No one cheered for them at the race."</em></p>
+            <ul class="options-list">
+                <li><label><input type="radio" name="q19" value="A"> A. TRUE</label></li>
+                <li><label><input type="radio" name="q19" value="B"> B. FALSE</label></li>
+            </ul>
+        </div>
+
+        <!-- Câu 20 -->
+        <div class="question">
+            <p>Câu 20: Choose the word that has the underlined part pronounced differently:</p>
+            <ul class="options-list">
+                <li><label><input type="radio" name="q20" value="A"> A. s<u>o</u>da</label></li>
+                <li><label><input type="radio" name="q20" value="B"> B. pot<u>a</u>to</label></li>
+                <li><label><input type="radio" name="q20" value="C"> C. n<u>o</u>se</label></li>
+                <li><label><input type="radio" name="q20" value="D"> D. coff<u>ee</u></label></li>
+            </ul>
+        </div>
+
+        <!-- Câu 23 -->
+        <div class="question">
+            <p>Câu 23: Choose the word that has the underlined part pronounced differently:</p>
+            <ul class="options-list">
+                <li><label><input type="radio" name="q23" value="A"> A. <u>ch</u>icken</label></li>
+                <li><label><input type="radio" name="q23" value="B"> B. <u>ch</u>ool</label></li>
+                <li><label><input type="radio" name="q23" value="C"> C. wa<u>tch</u></label></li>
+                <li><label><input type="radio" name="q23" value="D"> D. <u>ch</u>ange</label></li>
+            </ul>
+        </div>
+
+        <!-- Câu 25 -->
+        <div class="question">
+            <p>Câu 25: Tom can swim _____ cannot dive.</p>
+            <ul class="options-list">
+                <li><label><input type="radio" name="q25" value="A"> A. but</label></li>
+                <li><label><input type="radio" name="q25" value="B"> B. or</label></li>
+                <li><label><input type="radio" name="q25" value="C"> C. with</label></li>
+                <li><label><input type="radio" name="q25" value="D"> D. and</label></li>
+            </ul>
+        </div>
+
+        <!-- Câu 26 -->
+        <div class="question">
+            <p>Câu 26: How many syllables are there in the word "badminton"?</p>
+            <ul class="options-list">
+                <li><label><input type="radio" name="q26" value="A"> A. two</label></li>
+                <li><label><input type="radio" name="q26" value="B"> B. five</label></li>
+                <li><label><input type="radio" name="q26" value="C"> C. three</label></li>
+                <li><label><input type="radio" name="q26" value="D"> D. four</label></li>
+            </ul>
+        </div>
+
+        <!-- Câu 32 -->
+        <div class="question">
+            <p>Câu 32: In America, it's very _____ in winter because it's snowy.</p>
+            <ul class="options-list">
+                <li><label><input type="radio" name="q32" value="A"> A. cold</label></li>
+                <li><label><input type="radio" name="q32" value="B"> B. sunny</label></li>
+                <li><label><input type="radio" name="q32" value="C"> C. warm</label></li>
+                <li><label><input type="radio" name="q32" value="D"> D. hot</label></li>
+            </ul>
+        </div>
+
+        <!-- Câu 35 -->
+        <div class="question">
+            <p>Câu 35: Choose the word whose underlined part is pronounced differently from the others:</p>
+            <ul class="options-list">
+                <li><label><input type="radio" name="q35" value="A"> A. c<u>ou</u>ntryside</label></li>
+                <li><label><input type="radio" name="q35" value="B"> B. s<u>i</u>xteen</label></li>
+                <li><label><input type="radio" name="q35" value="C"> C. p<u>i</u>nk</label></li>
+                <li><label><input type="radio" name="q35" value="D"> D. act<u>i</u>ve</label></li>
+            </ul>
+        </div>
+
+        <!-- Câu 45 -->
+        <div class="question">
+            <p>Câu 45: Her friend is _____.</p>
+            <img class="quiz-img" src="https://wikimedia.org" alt="Vietnam Flag">
+            <ul class="options-list">
+                <li><label><input type="radio" name="q45" value="A"> A. Chinese</label></li>
+                <li><label><input type="radio" name="q45" value="B"> B. Indian</label></li>
+                <li><label><input type="radio" name="q45" value="C"> C. Japanese</label></li>
+                <li><label><input type="radio" name="q45" value="D"> D. Vietnamese</label></li>
+            </ul>
+        </div>
