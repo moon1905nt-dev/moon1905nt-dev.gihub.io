@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Luyện Thi IOE Khối 5 - MAI NGOC</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 0; color: #333; }
+        .navbar { background-color: #fff; padding: 15px 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .user-info { display: flex; gap: 40px; }
+        .info-box { text-align: center; }
+        .info-label { font-size: 12px; color: #888; text-transform: uppercase; font-weight: bold; }
+        .info-value { font-size: 18px; color: #1a73e8; font-weight: bold; margin-top: 4px; }
+        .quiz-container { max-width: 800px; background: white; margin: 30px auto; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .badge-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .badge { background-color: #e8f0fe; color: #1a73e8; padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: bold; }
+        .hint-btn { background: none; border: none; color: #f4b400; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .question-text { font-size: 22px; font-weight: 600; line-height: 1.6; margin-bottom: 30px; color: #202124; }
+        .quiz-image { max-width: 100%; max-height: 250px; border-radius: 8px; display: block; margin: 0 auto 20px auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .options-container { display: flex; flex-direction: column; gap: 14px; }
+        .option-card { display: flex; align-items: center; padding: 15px 20px; border: 1px solid #dadce0; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 16px; font-weight: 500; }
+        .option-card:hover { background-color: #f8f9fa; border-color: #bcc1c4; }
+        .option-card.selected { background-color: #e8f0fe; border-color: #1a73e8; color: #1967d2; }
+        .option-prefix { font-weight: bold; background: #f1f3f4; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 15px; }
+        .option-card.selected .option-prefix { background-color: #1a73e8; color: white; }
+        .control-panel { display: flex; justify-content: space-between; align-items: center; max-width: 800px; margin: 20px auto; padding: 0 10px; }
+        .btn { padding: 12px 28px; border-radius: 24px; font-size: 15px; font-weight: bold; cursor: pointer; transition: all 0.2s; border: 1px solid #dadce0; background: white; color: #3c4043; }
+        .btn:hover { background-color: #f8f9fa; }
+        .btn-primary { background-color: #1a73e8; color: white; border: none; }
+        .btn-primary:hover { background-color: #1557b0; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .hint-text { background-color: #fffde7; border-left: 4px solid #f4b400; padding: 12px; margin-bottom: 20px; border-radius: 4px; display: none; font-style: italic; }
+        #summary-screen { text-align: center; padding: 40px 20px; }
+        .score-highlight { font-size: 48px; color: #2e7d32; font-weight: bold; margin: 20px 0; }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div style="font-weight: bold; font-size: 18px; color: #2e7d32;">MAI NGOC - ƯƠM MẦM TƯƠNG LAI</div>
+    <div class="user-info">
+        <div class="info-box"><div class="info-label">NGƯỜI CHƠI</div><div class="info-value" id="username-display">Học Sinh</div></div>
+        <div class="info-box"><div class="info-label">ĐIỂM SỐ</div><div class="info-value" id="score-display">0</div></div>
+        <div class="info-box"><div class="info-label">TIẾN ĐỘ</div><div class="info-value" id="progress-display">1 / 100</div></div>
+    </div>
+</div>
+
+<div class="quiz-container" id="quiz-box">
+    <div class="badge-container">
+        <div class="badge" id="question-type-badge">MULTIPLE CHOICE</div>
+        <button class="hint-btn" onclick="toggleHint()">💡 Gợi ý</button>
+    </div>
+    
+    <div class="hint-text" id="hint-box">Hãy suy nghĩ thật kỹ nhé!</div>
+    
+    <div id="question-content">
+        <!-- Nội dung câu hỏi và hình ảnh tự động tải ở đây -->
+    </div>
+    
+    <div class="options-container" id="options-box">
+        <!-- Các phương án lựa chọn được nạp tự động bằng JavaScript -->
+    </div>
+</div>
+
+<div class="control-panel" id="controls">
+    <button class="btn" id="btn-prev" onclick="navigateQuestion(-1)">← Trước</button>
+    <button class="btn" id="btn-skip" onclick="skipQuestion()">Bỏ qua</button>
+    <button class="btn btn-primary" id="btn-next" onclick="navigateQuestion(1)">Sau →</button>
+</div>
+
+<script>
+    const questionBank = [
+        // --- ĐỀ THI 1 ---
+        { id: 2, type: "FILL", text: "She t_ _ _ lots of photos at the food festival yesterday.", hint: "Quá khứ của từ 'take'", options: ["ook", "ake", "akes", "aken"], correct: 0 },
+        { id: 3, type: "FILL", text: "How often do you visit your grandparents? - Once a w_ _ _.", hint: "Một lần một tuần", options: ["eek", "ork", "alk", "rite"], correct: 0 },
+        { id: 4, type: "CHOICE", text: "The city is crowded ___ busy.", options: ["or", "but", "with", "and"], correct: 3 },
+        { id: 6, type: "CHOICE", text: "Write a question for the underlined part: 'My house is big and new. I love it.'", options: ["Who do you live with?", "Where are you living now?", "What's your house like?", "What's your address?"], correct: 2 },
+        { id: 8, type: "FILL", text: "Where _ _ Ba and Hung live?", hint: "Trợ động từ số nhiều", options: ["do", "does", "did", "are"], correct: 0 },
+        { id: 9, type: "CHOICE", text: "My favourite food is _____.", image: "https://unsplash.com", options: ["pork", "fish", "beef", "chicken"], correct: 3 },
+        { id: 10, type: "FILL", text: "She al_ _ _ _ _ finishes her homework before going to bed.", hint: "Trạng từ chỉ tần suất luôn luôn", options: ["ways", "most", "often", "time"], correct: 0 },
+        { id: 11, type: "FILL", text: "moun_ _ _ _", hint: "Từ chỉ ngọn núi", options: ["tain", "tion", "ting", "tens"], correct: 0 },
+        { id: 13, type: "CHOICE", text: "Is this your desk? – ....", options: ["No. That desk is my", "No. That my desk is", "No. That desk my", "No. That's my desk"], correct: 3 },
+        { id: 16, type: "CHOICE", text: "We have ... for meals every day.", options: ["the meat", "vegetables", "the beer", "the milk"], correct: 1 },
+        { id: 17, type: "CHOICE", text: "Whose book are you reading? - It’s ….", options: ["English book", "Mary's", "about Mary", "interesting"], correct: 1 },
+        { id: 18, type: "FILL", text: "_ _ FOR A PICNIC", hint: "Cụm từ đi dã ngoại", options: ["GO", "DO", "TO", "ON"], correct: 0 },
+        { id: 19, type: "CHOICE", text: "Tony flies back to Australia. Which kind of transportation does he use?", options: ["Car", "Underground", "Train", "Plane"], correct: 3 },
+        { id: 20, type: "CHOICE", text: "Put the adverb in the brackets into the correct place: They go to the cinema on weekends. (often)", options: ["They go to the often cinema on weekends.", "They go often to the cinema on weekends.", "Often they go to the cinema on weekends.", "They often go to the cinema on weekends."], correct: 3 },
+        { id: 21, type: "TRUEFALSE", text: "Mary is Australian, and she is very active. (Hình ảnh bé chơi đá bóng)", image: "https://unsplash.com", options: ["TRUE", "FALSE"], correct: 1 },
+        { id: 22, type: "CHOICE", text: "We … stop when the light is red.", options: ["mustn’t", "can", "can’t", "must"], correct: 3 },
+        { id: 25, type: "CHOICE", text: "There is a _____ bird on the tree.", image: "https://wikimedia.org", options: ["green", "yellow", "orange", "blue"], correct: 3 },
+        { id: 26, type: "CHOICE", text: "Choose the word whose underlined part is pronounced differently from the others.", options: ["n<u>ear</u>", "y<u>ear</u>", "cl<u>ear</u>", "w<u>ear</u>"], correct: 3 },
+        { id: 27, type: "FILL", text: "_ _ _ _ time do they usually have breakfast?", hint: "Mấy giờ", options: ["What", "When", "How ", "Where"], correct: 0 },
+        { id: 29, type: "CHOICE", text: "The writer is sitting at the desk and writing a story. Tìm hình đúng:", image: "https://unsplash.com", options: ["Hình A (Kỹ sư)", "Hình B (Bác sĩ)", "Hình C (Nhà văn đang viết bài)", "Hình D (Ca sĩ)"], correct: 2 },
+        { id: 30, type: "FILL", text: "The clouds _ _ _ white.", hint: "Động từ tobe số nhiều", options: ["are", "am", "is", "was"], correct: 0 },
+        { id: 31, type: "CHOICE", text: "Look at the picture and choose the correct answer:", image: "https://unsplash.com", options: ["three cats", "five fish", "three fish", "five cats"], correct: 1 },
+        { id: 33, type: "CHOICE", text: "Where ___ Peter go last holiday?", options: ["do", "did", "has", "does"], correct: 1 },
+        { id: 35, type: "CHOICE", text: "Choose the correct sentence:", options: ["Tan usually get up early in the morning.", "Tan usually gets up early in the morning.", "Tan usually gets up early on the morning.", "Tan usually get up early on the morning."], correct: 1 },
+        { id: 38, type: "FILL", text: "_ is the last letter in the Vietnamese alphabet.", hint: "Chữ cái cuối cùng tiếng Việt", options: ["Y", "X", "U", "Z"], correct: 0 },
+        { id: 40, type: "CHOICE", text: "Choose the word that has main stress placed differently from the others.", options: ["sixteen", "bakery", "December", "beside"], correct: 1 },
+Hãy thận trọng khi sử dụng mã.
+{ id: 41, type: "CHOICE", text: "My parents are _____ the house.", image: "unsplash.com", options: ["painting", "building", "decorating", "cleaning"], correct: 0 },
+{ id: 42, type: "CHOICE", text: "What are the dwarfs like?", image: "wikimedia.org", options: ["tall and hard-working", "short and cruel", "short and hard-working", "tall and kind"], correct: 2 },
+{ id: 43, type: "FILL", text: "I of_ _ _ go to sports center at the weekend.", hint: "Thường xuyên", options: ["ten", "tenly", "times", "frequent"], correct: 0 },
+{ id: 44, type: "CHOICE", text: "Do you live in this house? - Yes, ________.", options: ["he does", "I do", "I am", "she is"], correct: 1 },
+{ id: 45, type: "CHOICE", text: "What does your father do? - He's _____.", image: "unsplash.com", options: ["a teacher", "a cook", "a doctor", "a cooker"], correct: 1 },
+{ id: 47, type: "CHOICE", text: "Minh: Nice to meet you, Mai. - Mai: Nice to meet you, ___.", options: ["and", "so", "too", "two"], correct: 2 },
+{ id: 48, type: "FILL", text: "VISI OUR GRANDPARENTS", hint: "Đi thăm ông bà", options: ["T", "D", "M", "E"], correct: 0 },
+{ id: 50, type: "FILL", text: "Superh _ ", hint: "Siêu anh hùng", options: ["ero", "man", "boy", "girl"], correct: 0 },
+{ id: 52, type: "CHOICE", text: "There isn't ____ milk in the bottle.", options: ["no", "any", "lots", "some"], correct: 1 },
+{ id: 53, type: "CHOICE", text: "Choose the word whose main stress is placed differently from the others.", options: ["enjoy", "today", "practice", "begin"], correct: 2 },
+{ id: 54, type: "FILL", text: "Thanh Binh got _ _ the bus stop with his friend.", options: ["on", "at", "in", "to"], correct: 1 },
+{ id: 56, type: "CHOICE", text: "She sometimes goes shopping and _____ dinner.", options: ["cooked", "cookes", "cooks", "cook"], correct: 2 },
+{ id: 57, type: "CHOICE", text: "What is she doing?", image: "freepik.com", options: ["Cooking dinner", "Doing housework", "Going shopping", "Going fishing"], correct: 0 },
+{ id: 58, type: "FILL", text: "William can play the _ _ _ _ _ very well.", image: "unsplash.com", options: ["piano", "drum", "guitar", "violin"], correct: 0 },
+{ id: 59, type: "FILL", text: "Do you have any umbrellas? - Yes. I have o _.", options: ["ne", "ur", "ld", "am"], correct: 0 },
+{ id: 61, type: "CHOICE", text: "What is she doing?", image: "unsplash.com", options: ["Doing homework", "Doing washing", "Listening to music", "Cleaning the house"], correct: 1 },
+{ id: 62, type: "CHOICE", text: "How many syllables are there in the word 'station'?", options: ["four", "five", "two", "three"], correct: 2 },
+{ id: 63, type: "FILL", text: "Did Lisa go to school yesterday? - No, she _ _ _n't.", options: ["did", "was", "does", "is"], correct: 0 },
+{ id: 65, type: "FILL", text: "twenty-five + thirty = _ _ _ _ -five", options: ["fifty", "forty", "thirty", "sixty"], correct: 0 },
+{ id: 68, type: "FILL", text: "You should brush your t _ _ _ at least twice a day.", options: ["eeth", "ooth", "face", "hair"], correct: 0 },
+{ id: 70, type: "CHOICE", text: "My sister went to the ____ to buy some medicines.", options: ["museum", "cinema", "pharmacy", "stadium"], correct: 2 },
+{ id: 71, type: "CHOICE", text: "Linda has _____.", image: "freepik.com", options: ["yellow hair", "red hair", "long hair", "short hair"], correct: 3 },
+{ id: 72, type: "FILL", text: "My school h _ a big gate.", options: ["as", "ave", "is", "got"], correct: 0 },
+{ id: 73, type: "FILL", text: "Did you go _ _ the zoo yesterday?", options: ["to", "at", "in", "on"], correct: 0 },
+// --- ĐỀ THI 2 ---
+{ id: 101, type: "FILL", text: "Last Sunday, we played hide-and-_ _ _ _ at the park.", options: ["seek", "seen", "said", "side"], correct: 0 },
+{ id: 105, type: "FILL", text: "ph_ _ cal education", options: ["ysid", "ysis", "ichi", "ysic"], correct: 2 },
+{ id: 108, type: "FILL", text: "What's the w ther like today? It's sunny.", options: ["ea", "ee", "ae", "ai"], correct: 0 },
+{ id: 109, type: "FILL", text: "I will go on a pic _ _ with my friends this weekend.", image: "freepik.com", options: ["nic", "king", "ture", "ture"], correct: 0 },
+{ id: 110, type: "CHOICE", text: "What is she doing?", image: "unsplash.com", options: ["Doing karate", "Going to school", "Going swimming", "Cleaning the house"], correct: 2 },
+{ id: 113, type: "CHOICE", text: "Write a question for the underlined part: 'I swam in the sea.'", options: ["When did you go to the sea?", "What time will you be there?", "What did you do at the sea?", "Where will you swim?"], correct: 2 },
+{ id: 116, type: "FILL", text: "_ _ _ _ did you receive the news? - Yesterday morning.", options: ["When", "What", "Who", "Where"], correct: 0 },
+{ id: 117, type: "TRUEFALSE", text: "Tom is my friend from America. He is clever and friendly. We often read books together at school.\n\nNhận định: 'Tom and the writer often read books together at school.'", options: ["TRUE", "FALSE"], correct: 0 },
+{ id: 119, type: "CHOICE", text: "Look at the picture và đoán môn học tương ứng:", image: "freepik.com", options: ["Maths", "Vietnamese", "PE", "IT"], correct: 2 },
+{ id: 120, type: "CHOICE", text: "Where are your books?", options: ["They're beside the school bag.", "I like these books.", "They are fifty thousand dong.", "I bought them last month."], correct: 0 },
+{ id: 121, type: "CHOICE", text: "____ can I get to ACB bank? - Go straight and turn left.", options: ["Which", "How", "Why", "Where"], correct: 1 },
+{ id: 122, type: "CHOICE", text: "Choose the word whose stress pattern is different from the others:", options: ["Japan", "always", "reading", "city"], correct: 0 },
+{ id: 123, type: "FILL", text: "Do you like collecting st_ _ _ ? - Yes, I do.", image: "wikimedia.org", options: ["amps", "ones", "orie", "arst"], correct: 0 },
+{ id: 126, type: "CHOICE", text: "What about ____ to the park? - That's a good idea.", options: ["going", "to going", "to go", "go"], correct: 0 },
+{ id: 130, type: "CHOICE", text: "Look at the picture and choose the correct answer.", image: "freepik.com", options: ["Do morning exercise", "Go jogging", "Wash our faces", "Do our homework"], correct: 0 },
+{ id: 133, type: "FILL", text: "CHAT _ _ _ _ FRIENDS", options: ["WITH", "FROM", "FOR", "ONTO"], correct: 0 },
+{ id: 134, type: "CHOICE", text: "Look at the picture và chọn câu đúng:", image: "freepik.com", options: ["It's windy.", "It's rainy.", "It's cold.", "It's sunny."], correct: 0 },
+{ id: 135, type: "FILL", text: "She watches English cartoons to pr tice listening to English.", options: ["ac", "ec", "oc", "ic"], correct: 0 },
+{ id: 138, type: "CHOICE", text: "____ works on the farm.", options: ["A driver", "A doctor", "A farmer", "A teacher"], correct: 2 },
+{ id: 139, type: "CHOICE", text: "To make it sweeter, you can put more ___.", options: ["salt", "ice", "sugar", "lemon"], correct: 2 },
+{ id: 141, type: "CHOICE", text: "Look at the picture and choose the correct answer:", image: "unsplash.com", options: ["shoulder", "leg", "ears", "hair"], correct: 2 },
+{ id: 142, type: "FILL", text: "WED _ DAY", options: ["NES", "NESD", "NS", "ENDS"], correct: 0 },
+{ id: 143, type: "CHOICE", text: "Linh goes _____ from Mondays to Thursdays.", options: ["swims", "to swim", "swimming", "swim"], correct: 2 },
+{ id: 145, type: "TRUEFALSE", text: "Lan’s favourite colour is pink, and she has a pink school bag.", image: "freepik.com", options: ["TRUE", "FALSE"], correct: 0 },
+{ id: 146, type: "CHOICE", text: "What _____ your house number?", options: ["were", "is", "do", "are"], correct: 1 },
+{ id: 147, type: "CHOICE", text: "Choose a word that has different stressed syllables from others.", options: ["today", "writer", "belong", "away"], correct: 1 },
+{ id: 149, type: "CHOICE", text: "Do you _____ in this building?", options: ["living", "lives", "live", "lived"], correct: 2 },
+{ id: 150, type: "FILL", text: "Seventy plus ten minus five equals seventy-f _e.", options: ["iv", "if", "ev", "vi"], correct: 0 },
+{ id: 151, type: "CHOICE", text: "Laura _____ her grandparents last weekend.", options: ["visited", "visiting", "will visit", "is visiting"], correct: 0 },
+{ id: 154, type: "FILL", text: "There is a post office next _ _ my house.", options: ["to", "at", "in", "by"], correct: 0 },
+{ id: 155, type: "CHOICE", text: "Write a question for the underlined part: 'My birthday is on January 10th.'", options: ["How old are you?", "How was your birthday party?", "When is your birthday?", "What do you do every year?"], correct: 2 },
+{ id: 156, type: "FILL", text: "He can _ _ _ very fast.", image: "freepik.com", options: ["run", "sit", "fly", "hop"], correct: 0 },
+{ id: 158, type: "FILL", text: "The weather will _ _ good tomorrow morning.", options: ["be", "is", "are", "been"], correct: 0 },
+{ id: 162, type: "CHOICE", text: "Lisa is good at singing, so she takes part in a _____ competition.", options: ["sports", "music", "listening", "speaking"], correct: 1 },
+{ id: 163, type: "TRUEFALSE", text: "Lan is ten years old, and she likes dolphins.", image: "freepik.com", options: ["TRUE", "FALSE"], correct: 0 },
+{ id: 165, type: "FILL", text: "Do you think tennis is the _ _ _ _ expensive sport?", options: ["most", "more", "best", "less"], correct: 0 },
+{ id: 166, type: "CHOICE", text: "The girl is surfing the Internet on her computer.", image: "freepik.com", options: ["Hình đúng", "Hình sai"], correct: 0 },
+{ id: 167, type: "CHOICE", text: "Fifty-two minus twenty makes ___.", options: ["thiry-two", "twenty-two", "twelve", "ten"], correct: 0 },
+{ id: 170, type: "CHOICE", text: "Choose the word that has the underlined part pronounced differently:", options: ["soda", "coffee", "nose", "potato"], correct: 1 },
+{ id: 172, type: "CHOICE", text: "What number comes after eighty-nine?", options: ["Seventy", "Ninety", "Eighty-eight", "Forty-two"], correct: 1 },
+{ id: 173, type: "CHOICE", text: "Look at the picture and choose the correct answer:", image: "freepik.com", options: ["a window", "a chair", "a door", "a bed"], correct: 3 },
+{ id: 175, type: "FILL", text: "PLA BADMINTON", options: ["Y", "YING", "YS", "ED"], correct: 0 },
+{ id: 177, type: "CHOICE", text: "What does your aunt look like?", options: ["She has short black hair.", "She would like to be a singer.", "She likes reading books.", "She is good at maths."], correct: 0 },
+{ id: 179, type: "CHOICE", text: "Do you like the story 'Snow White and the _____ Dwarfs'?", options: ["Six", "Seven", "Five", "Nine"], correct: 1 },
+{ id: 181, type: "CHOICE", text: "Thanh ___ dressed and then goes to school.", options: ["wears", "gets", "get", "wear"], correct: 1 },
+{ id: 184, type: "CHOICE", text: "Last / month, / parents / go / Dong Nai / coach /./ Chọn câu đúng:", options: ["Last month, my parents went to Dong Nai by coach.", "Last month, my parents will go to Dong Na by coach.", "Last month, my parents are going to Dong Nai in coach.", "Last month, parents went to Dong Nai on coach."], correct: 0 },
+{ id: 186, type: "CHOICE", text: "What do people use to make lanterns at Halloween?", options: ["bananas", "pumpkins", "pineapples", "apples"], correct: 1 },
+{ id: 187, type: "FILL", text: "Unscramble this word: warteeh--> we _ _ r", image: "freepik.com", options: ["athe", "eath", "teha", "tahe"], correct: 0 },
+{ id: 191, type: "FILL", text: "The opposite of 'cheap' is ex _ _ _ _ _ _.", options: ["pensive", "pencive", "panesiv", "pencif"], correct: 0 },
+{ id: 197, type: "CHOICE", text: "There is only ___ egg left.", options: ["the", "an", "a", "ø"], correct: 1 }
+];
+let currentQuestionIndex = 0;
+let score = 0;
+let userAnswers = new Array(questionBank.length).fill(null);
+function initQuiz() {
+showQuestion(currentQuestionIndex);
+}
+function showQuestion(index) {
+document.getElementById('progress-display').innerText = ${index + 1} / ${questionBank.length};
+const q = questionBank[index];
+document.getElementById('question-type-badge').innerText = q.type.toUpperCase();
+document.getElementById('hint-box').style.display = "none";
+document.getElementById('hint-box').innerText = q.hint || "Hãy đọc kỹ đề bài và lựa chọn đáp án phù hợp.";
+let htmlContent = <div class="question-text">${q.text}</div>;
+if(q.image) {
+htmlContent += <img src="${q.image}" class="quiz-image" alt="Question Image">;
+}
+document.getElementById('question-content').innerHTML = htmlContent;
+const optionsBox = document.getElementById('options-box');
+optionsBox.innerHTML = '';
+q.options.forEach((opt, oIdx) => {
+const prefix = String.fromCharCode(65 + oIdx);
+const card = document.createElement('div');
+card.className = option-card ${userAnswers[index] === oIdx ? 'selected' : ''};
+card.onclick = () => selectOption(oIdx);
+card.innerHTML = <div class="option-prefix">${prefix}</div><div>${opt}</div>;
+optionsBox.appendChild(card);
+});
+document.getElementById('btn-prev').disabled = index === 0;
+if (index === questionBank.length - 1) {
+document.getElementById('btn-next').innerText = "Hoàn thành";
+} else {
+document.getElementById('btn-next').innerText = "Sau →";
+}
+}
+function selectOption(optionIndex) {
+const currentQuestion = questionBank[currentQuestionIndex];
+if(userAnswers[currentQuestionIndex] === currentQuestion.correct && optionIndex !== currentQuestion.correct) {
+score -= 10;
+} else if(userAnswers[currentQuestionIndex] !== currentQuestion.correct && optionIndex === currentQuestion.correct) {
+score += 10;
+}
+userAnswers[currentQuestionIndex] = optionIndex;
+document.getElementById('score-display').innerText = score;
+const cards = document.querySelectorAll('.option-card');
+cards.forEach((c, idx) => {
+if(idx === optionIndex) c.classList.add('selected');
+else c.classList.remove('selected');
+});
+}
+function navigateQuestion(step) {
+currentQuestionIndex += step;
+if(currentQuestionIndex >= questionBank.length) {
+finishQuiz();
+} else {
+showQuestion(currentQuestionIndex);
+}
+}
+function skipQuestion() {
+navigateQuestion(1);
+}
+function toggleHint() {
+const hintBox = document.getElementById('hint-box');
+hintBox.style.display = hintBox.style.display === "none" ? "block" : "none";
+}
+function finishQuiz() {
+document.getElementById('quiz-box').innerHTML = <div id="summary-screen"> <h2 style="color: #2e7d32;">🎉 Chúc mừng em đã hoàn thành bài thi! 🎉</h2> <p style="font-size: 18px; margin-top: 10px;">Kết quả tổng kết của hệ thống IOE MAI NGOC:</p> <div class="score-highlight">${score} Điểm</div> <p style="color: #666;">Số câu làm đúng: ${score / 10} / ${questionBank.length} câu hỏi.</p> <button class="btn btn-primary" style="margin-top: 25px; border-radius: 4px;" onclick="window.location.reload()">Làm lại bài thi</button> </div>;
+document.getElementById('controls').style.display = "none";
+}
+window.onload = initQuiz;
